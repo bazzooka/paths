@@ -1,0 +1,1 @@
+require('../jsx/main.jsx');

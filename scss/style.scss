@@ -1,0 +1,31 @@
+body{
+	margin: 0;
+	padding: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.master-wrapper{
+	display: flex;
+	justify-content: space-between;
+}
+
+.draw-container{
+	flex: 2;
+}
+
+.params-container{
+	flex: 1;
+}
+
+.svg-style{
+	display:block;
+	margin:auto;
+	overflow:visible;
+}
+
+path{
+	stroke: black;
+}
