@@ -38,7 +38,7 @@ path{
 .position-handler{
 	stroke: $tronBlue;
 	stroke-width: 0.25;
-	fill: transparent;
+	fill: rgba(9, 193, 191, 0.2);
 	filter: url('#blurred');
 	transition: fill, stroke 0.2s;
 
@@ -51,4 +51,6 @@ path{
 .curve-handler{
 	fill: $tronBlue;
 	filter: url('#blurred');
+	stroke: white;
+    stroke-width: 0.25;
 }

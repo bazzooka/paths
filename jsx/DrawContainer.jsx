@@ -9,9 +9,10 @@ let DrawContainer = React.createClass({
     dragStartPosition: null,
     command: null
   },
-  positionHandlerParams: {
+  handlerParams: {
     cubeSize: 2,
-    halfSize: 1
+    halfSize: 1,
+    rayon: 0.75,
   },
 
   getInitialState: function() {
@@ -88,13 +89,13 @@ let DrawContainer = React.createClass({
 
     } else {
       if (this.dragParams.command !== "V") {
-        this.dragParams.dragElt.setAttribute("x", newX - this.positionHandlerParams.halfSize);
+        this.dragParams.dragElt.setAttribute("x", newX - this.handlerParams.halfSize);
       } else {
         newX = null;
       }
 
       if (this.dragParams.command !== "H") {
-        this.dragParams.dragElt.setAttribute("y", newY - this.positionHandlerParams.halfSize);
+        this.dragParams.dragElt.setAttribute("y", newY - this.handlerParams.halfSize);
       } else {
         newY = null;
       }
@@ -124,8 +125,8 @@ let DrawContainer = React.createClass({
         this.handlers.push({
           type: "circle",
           index: i,
-          x: parseInt(newPath.controls[i].x) - this.positionHandlerParams.halfSize,
-          y: parseInt(newPath.controls[i].y) - this.positionHandlerParams.halfSize
+          x: parseInt(newPath.controls[i].x) - this.handlerParams.halfSize,
+          y: parseInt(newPath.controls[i].y) - this.handlerParams.halfSize
         });
       }
       if (["C", "Q"].indexOf(path.command) !== -1) {
@@ -157,7 +158,7 @@ let DrawContainer = React.createClass({
   render: function() {
     var paths = null,
       positionHandlers = null,
-      curvetHandlers = null,
+      curveHandlers = null,
       curvePointToOrigin = null,
       defs = "";
     if (this.state.paths) {
@@ -167,7 +168,7 @@ let DrawContainer = React.createClass({
       let oldEltX = null,
         oldEltY = null;
       positionHandlers = this.handlers.map((elt, i) => {
-         let posHand = <rect className="position-handler" x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.positionHandlerParams.cubeSize} height={this.positionHandlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
+         let posHand = <rect className="position-handler" x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.handlerParams.cubeSize} height={this.handlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
         oldEltX = elt.x ? elt : oldEltX;
         oldEltY = elt.y ? elt : oldEltY;
         return posHand;
@@ -175,8 +176,25 @@ let DrawContainer = React.createClass({
     }
 
     if (this.curveHandlers.length !== 0) {
-      curvetHandlers = this.curveHandlers.map((elt, i) => {
-        return <circle className="curve-handler" cx={elt.x} cy={elt.y} r="0.5" data-id={elt.index} data-pos={elt.pos} key={i}></circle>;
+      curveHandlers = this.curveHandlers.map((elt, i) => {
+        return <circle className="curve-handler" cx={elt.x} cy={elt.y} r={this.handlerParams.rayon} data-id={elt.index} data-pos={elt.pos} key={i}></circle>;
+      });
+
+      // Draw line between curve modifier and it's origin
+      curvePointToOrigin = this.curveHandlers.map((elt, i) => {
+        let xStart = elt.x,
+        yStart = elt.y,
+        xEnd = 0,
+        yEnd = 0;
+        if(elt.pos === 1){
+          xEnd = this.state.paths.controls[elt.index - 1].x;
+          yEnd = this.state.paths.controls[elt.index - 1].y;
+        } else {
+          xEnd = this.state.paths.controls[elt.index].x;
+          yEnd = this.state.paths.controls[elt.index].y;
+        }
+        let newPathToOrigin = ["M", xStart, yStart, "L", xEnd, yEnd].join(" ");
+        return <path d={newPathToOrigin}></path>
       });
     }
 
@@ -196,9 +214,10 @@ let DrawContainer = React.createClass({
         </defs>
           <rect x="0" y="0" width="100%" height="100%" fill="black"/>
           {paths}
-          {positionHandlers}
-          {curvetHandlers}
           {curvePointToOrigin}
+          {positionHandlers}
+          {curveHandlers}
+          
         </svg>
       </div>
       )
