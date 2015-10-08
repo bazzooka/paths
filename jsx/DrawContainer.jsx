@@ -9,6 +9,10 @@ let DrawContainer = React.createClass({
     dragStartPosition: null,
     command: null
   },
+  positionHandlerParams: {
+    cubeSize: 2,
+    halfSize: 1
+  },
 
   getInitialState: function() {
     return {
@@ -35,6 +39,8 @@ let DrawContainer = React.createClass({
         pt.x = e.clientX;
         pt.y = e.clientY;
         me.dragParams.dragStartPosition = this.getMousePositionInSVG(e);
+
+        this.updateHandlersColors(e);
       }
     });
 
@@ -51,6 +57,17 @@ let DrawContainer = React.createClass({
         me.dragParams.dragElt = null;
       }
     });
+  },
+
+  updateHandlersColors: function(e){
+    if (e.srcElement.classList.contains("position-handler") ){
+      // Remove all selected class from position-handlers
+      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler'), function(elt){
+        console.log(elt);
+        elt.classList.remove('selected');
+      });
+      this.dragParams.dragElt.classList.add("selected");
+    }
   },
 
   updatePosition: function(x, y) {
@@ -71,13 +88,13 @@ let DrawContainer = React.createClass({
 
     } else {
       if (this.dragParams.command !== "V") {
-        this.dragParams.dragElt.setAttribute("cx", newX);
+        this.dragParams.dragElt.setAttribute("x", newX - this.positionHandlerParams.halfSize);
       } else {
         newX = null;
       }
 
       if (this.dragParams.command !== "H") {
-        this.dragParams.dragElt.setAttribute("cy", newY);
+        this.dragParams.dragElt.setAttribute("y", newY - this.positionHandlerParams.halfSize);
       } else {
         newY = null;
       }
@@ -107,8 +124,8 @@ let DrawContainer = React.createClass({
         this.handlers.push({
           type: "circle",
           index: i,
-          x: parseInt(newPath.controls[i].x),
-          y: parseInt(newPath.controls[i].y)
+          x: parseInt(newPath.controls[i].x) - this.positionHandlerParams.halfSize,
+          y: parseInt(newPath.controls[i].y) - this.positionHandlerParams.halfSize
         });
       }
       if (["C", "Q"].indexOf(path.command) !== -1) {
@@ -139,34 +156,49 @@ let DrawContainer = React.createClass({
 
   render: function() {
     var paths = null,
-      circleHandlers = null,
-      rectHandlers = null;
+      positionHandlers = null,
+      curvetHandlers = null,
+      curvePointToOrigin = null,
+      defs = "";
     if (this.state.paths) {
-      paths = <path d={this.state.paths.path}></path>
+      paths = <path d={this.state.paths.path} className="blurred"></path>
     }
     if (this.handlers.length !== 0) {
       let oldEltX = null,
         oldEltY = null;
-      circleHandlers = this.handlers.map((elt, i) => {
-        let circle = <circle className="position-handler" cx={elt.x || oldEltX.x} cy={elt.y || oldEltY.y} r="1" data-id={elt.index} key={i}></circle>;
+      positionHandlers = this.handlers.map((elt, i) => {
+         let posHand = <rect className="position-handler" x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.positionHandlerParams.cubeSize} height={this.positionHandlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
         oldEltX = elt.x ? elt : oldEltX;
         oldEltY = elt.y ? elt : oldEltY;
-        return circle;
+        return posHand;
       });
     }
 
     if (this.curveHandlers.length !== 0) {
-      rectHandlers = this.curveHandlers.map((elt, i) => {
-        return <rect className="curve-handler" x={elt.x} y={elt.y} width="1" height="1" data-id={elt.index} data-pos={elt.pos} key={i}></rect>;
+      curvetHandlers = this.curveHandlers.map((elt, i) => {
+        return <circle className="curve-handler" cx={elt.x} cy={elt.y} r="0.5" data-id={elt.index} data-pos={elt.pos} key={i}></circle>;
       });
     }
 
+    defs = '<filter id="blurred" filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="400">';
+    defs += '<feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>';
+    defs += '<feMerge>';
+    defs += '<feMergeNode in="coloredBlur"/>';
+    defs += '<feMergeNode in="SourceGraphic"/>';
+    defs += '</feMerge>';
+    defs += '</filter>';
+
     return (
       <div id="draw-container" className="draw-container">
-        <svg ref="svgElt" viewBox="0 0 80 80" width="480" height="480" fill="currentcolor" className="svg-style">
+        <svg ref="svgElt" viewBox="0 0 80 80" width="100%" height="100%" fill="currentcolor" className="svg-style">
+        <defs dangerouslySetInnerHTML={{__html: defs}}>
+          
+        </defs>
+          <rect x="0" y="0" width="100%" height="100%" fill="black"/>
           {paths}
-          {circleHandlers}
-          {rectHandlers}
+          {positionHandlers}
+          {curvetHandlers}
+          {curvePointToOrigin}
         </svg>
       </div>
       )

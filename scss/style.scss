@@ -1,3 +1,5 @@
+$tronBlue: #09C1BF;
+
 body{
 	margin: 0;
 	padding: 0;
@@ -27,5 +29,26 @@ body{
 }
 
 path{
-	stroke: black;
+	stroke: white;
+    stroke-width: 0.25;
+    filter: url('#blurred');
+    fill: rgba(173, 255, 253,0.7);
+}
+
+.position-handler{
+	stroke: $tronBlue;
+	stroke-width: 0.25;
+	fill: transparent;
+	filter: url('#blurred');
+	transition: fill, stroke 0.2s;
+
+	&.selected{
+		stroke: white;
+		fill: $tronBlue;
+	}
+}
+
+.curve-handler{
+	fill: $tronBlue;
+	filter: url('#blurred');
 }
