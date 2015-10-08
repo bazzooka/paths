@@ -6,7 +6,7 @@
 2. Add Grid
 3. Add image 
 4. Style
- 4.1. Style ParamsContainer
- 4.2. Style DrawContainer
+ - Style ParamsContainer
+ - Style DrawContainer
 5. Export to SVG functions
 
