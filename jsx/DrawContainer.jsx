@@ -103,7 +103,7 @@ let DrawContainer = React.createClass({
     this.curveHandlers.length = 0;
     for (let i = 0, l = newPath.controls.length; i < l; i++) {
       let path = newPath.controls[i];
-      if (["M", "L", "H", "V", "C"].indexOf(path.command) !== -1) {
+      if (["M", "L", "H", "V", "C", "S", "Q", "T"].indexOf(path.command) !== -1) {
         this.handlers.push({
           type: "circle",
           index: i,
@@ -111,7 +111,7 @@ let DrawContainer = React.createClass({
           y: parseInt(newPath.controls[i].y)
         });
       }
-      if ("C" === path.command) {
+      if (["C", "Q"].indexOf(path.command) !== -1) {
         this.curveHandlers.push({
           type: "rect",
           index: i,
@@ -119,6 +119,8 @@ let DrawContainer = React.createClass({
           x: parseInt(newPath.controls[i].x1),
           y: parseInt(newPath.controls[i].y1)
         });
+      }
+      if(["C", "S"].indexOf(path.command) !== -1){
         this.curveHandlers.push({
           type: "rect",
           index: i,

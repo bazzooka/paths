@@ -5,6 +5,9 @@ import H_Command from './H_Command.jsx';
 import V_Command from './V_Command.jsx';
 import Z_Command from './Z_Command.jsx';
 import C_Command from './C_Command.jsx';
+import S_Command from './S_Command.jsx';
+import Q_Command from './Q_Command.jsx';
+import T_Command from './T_Command.jsx';
 
 
 let Row = React.createClass({
@@ -42,27 +45,36 @@ let Row = React.createClass({
 
     switch (this.state.command) {
       case "M":
-        coordonnees = <M_Command  x={this.props.x} y={this.props.y} data-command="M" ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
         break;
       case "L":
-        coordonnees = <L_Command  x={this.props.x} y={this.props.y} data-command="L" ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} />;
         break;
       case "H":
-        coordonnees = <H_Command  x={this.props.x} data-command="H" ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <H_Command  x={this.props.x} ref="coordonnees" onUpdate={this.onUpdate} />;
         break;
       case "V":
-        coordonnees = <V_Command  y={this.props.y} data-command="V" ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <V_Command  y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} />;
         break;
       case "Z":
-        coordonnees = <Z_Command data-command="Z" ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} />;
         break;
       case "C":
-        coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y}data-command="M" ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        break;
+      case "S":
+        coordonnees = <S_Command x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        break;
+      case "Q":
+        coordonnees = <Q_Command x1={this.props.x1} y1={this.props.y1} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        break;
+      case "T":
+        coordonnees = <T_Command x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
         break;
 
     }
 
-    options = ["M", "L", "H", "V", "Z", "C"].map((elt, i) => {
+    options = ["M", "L", "H", "V", "Z", "C", "S", "Q", "T"].map((elt, i) => {
       return (<option value={elt} key={elt}>{elt}</option>)
       });
 
