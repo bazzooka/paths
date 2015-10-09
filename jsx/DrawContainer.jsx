@@ -1,8 +1,10 @@
 import React from 'react';
 
 let DrawContainer = React.createClass({
-  handlers: [], // List all circle elements
-  curveHandlers: [],
+  handlers: [], // List all position handlers
+  curveHandlers: [], // List curve handler
+  middlePaths: [], // Middle paths redraw
+
   dragParams: {
     isDragging: false,
     dragElt: null,
@@ -26,7 +28,6 @@ let DrawContainer = React.createClass({
 
     me.svgElt = this.refs.svgElt.getDOMNode();
 
-    // https://www.google.fr/search?q=drag+SVG+element&oq=drag+SVG+element&aqs=chrome..69i57j0l4.4846j0j7&sourceid=chrome&es_sm=91&ie=UTF-8#safe=off&q=svg+get+mouse+position
     me.svgElt.addEventListener("mousedown", (e) => {
       if (e.srcElement.classList.contains("position-handler") || e.srcElement.classList.contains("curve-handler")) {
         me.dragParams.isDragging = true;
@@ -40,9 +41,14 @@ let DrawContainer = React.createClass({
         pt.x = e.clientX;
         pt.y = e.clientY;
         me.dragParams.dragStartPosition = this.getMousePositionInSVG(e);
-
-        this.updateHandlersColors(e);
+      } else {
+        me.dragParams.isDragging = false;
+        me.dragParams.dragElt = null;
+        me.dragParams.dragIndex = -1;
+        me.dragParams.dragCurveIndex = -1;
+        me.dragParams.command = "";
       }
+      this.updateHandlersColors(e);
     });
 
     this.refs.svgElt.getDOMNode().addEventListener("mousemove", (e) => {
@@ -60,14 +66,23 @@ let DrawContainer = React.createClass({
     });
   },
 
-  updateHandlersColors: function(e){
-    if (e.srcElement.classList.contains("position-handler") ){
-      // Remove all selected class from position-handlers
-      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler'), function(elt){
-        console.log(elt);
+  updateHandlersColors: function(e) {
+    // Remove all selected class from position-handlers
+      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler'), function(elt) {
         elt.classList.remove('selected');
       });
+
+       // Desactive all overLapPath
+      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath'), function(elt) {
+        elt.classList.remove('selected');
+      });
+
+    if (e.srcElement.classList.contains("position-handler") && this.dragParams.isDragging) {
       this.dragParams.dragElt.classList.add("selected");
+
+      if(this.dragParams.dragIndex !== 0){
+        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add("selected");  
+      }
     }
   },
 
@@ -80,11 +95,11 @@ let DrawContainer = React.createClass({
       this.dragParams.dragElt.setAttribute("y", newY);
 
       let newPosition = {};
-      newPosition["x"+this.dragParams.dragCurveIndex] = newX;
-      newPosition["y"+this.dragParams.dragCurveIndex] = newY;
-      newPosition.index= this.dragParams.dragIndex;
+      newPosition["x" + this.dragParams.dragCurveIndex] = newX;
+      newPosition["y" + this.dragParams.dragCurveIndex] = newY;
+      newPosition.index = this.dragParams.dragIndex;
       newPosition.dragCurveIndex = this.dragParams.dragCurveIndex;
-      
+
       this.props.onDrawChanged(newPosition);
 
     } else {
@@ -119,6 +134,8 @@ let DrawContainer = React.createClass({
   pathChanged: function(newPath) {
     this.handlers.length = 0;
     this.curveHandlers.length = 0;
+    this.middlePaths.length = 0;
+
     for (let i = 0, l = newPath.controls.length; i < l; i++) {
       let path = newPath.controls[i];
       if (["M", "L", "H", "V", "C", "S", "Q", "T"].indexOf(path.command) !== -1) {
@@ -138,7 +155,7 @@ let DrawContainer = React.createClass({
           y: parseInt(newPath.controls[i].y1)
         });
       }
-      if(["C", "S"].indexOf(path.command) !== -1){
+      if (["C", "S"].indexOf(path.command) !== -1) {
         this.curveHandlers.push({
           type: "rect",
           index: i,
@@ -146,6 +163,72 @@ let DrawContainer = React.createClass({
           x: parseInt(newPath.controls[i].x2),
           y: parseInt(newPath.controls[i].y2)
         });
+      }
+
+
+      /*
+       * Determine each segments of master path
+       */
+      switch (path.command) {
+        case "M": this.middlePaths.push({
+            xStart: path.x,
+            yStart: path.y,
+            xEnd: path.x,
+            yEnd: path.y,
+            command: "Z",
+            index: i
+          });
+          break;
+        case "L":
+        case "T":
+        case "C":
+        case "S":
+        case "Q":
+          this.middlePaths[i - 1].x1 = path.x1 || null;
+          this.middlePaths[i - 1].y1 = path.y1 || null;
+          this.middlePaths[i - 1].x2 = path.x2 || null;
+          this.middlePaths[i - 1].y2 = path.y2 || null;
+
+          this.middlePaths[i - 1].xEnd = path.x;
+          this.middlePaths[i - 1].yEnd = path.y;
+
+          this.middlePaths.push({
+            xStart: path.x,
+            yStart: path.y,
+            xEnd: path.x,
+            yEnd: path.y,
+            command: "Z"
+          });
+
+          this.middlePaths[i - 1].command = path.command;
+          this.middlePaths[i - 1].index = i;
+          break;
+        case "H":
+          this.middlePaths[i - 1].xEnd = path.x;
+
+          this.middlePaths.push({
+            xStart: path.x,
+            yStart: this.middlePaths[i - 1].yEnd,
+            xEnd: path.x,
+            yEnd: this.middlePaths[i - 1].yEnd,
+            command: "Z"
+          });
+          this.middlePaths[i - 1].command = path.command;
+          this.middlePaths[i - 1].index = i;
+          break;
+        case "V":
+          this.middlePaths[i - 1].yEnd = path.y;
+
+          this.middlePaths.push({
+            xStart: this.middlePaths[i - 1].xEnd,
+            yStart: path.y,
+            xEnd: this.middlePaths[i - 1].xEnd,
+            yEnd: path.y,
+            command: "Z"
+          });
+          this.middlePaths[i - 1].command = path.command;
+          this.middlePaths[i - 1].index = i;
+          break;
       }
     }
 
@@ -160,21 +243,29 @@ let DrawContainer = React.createClass({
       positionHandlers = null,
       curveHandlers = null,
       curvePointToOrigin = null,
+      middlePaths = null,
       defs = "";
     if (this.state.paths) {
       paths = <path d={this.state.paths.path} className="blurred"></path>
     }
+
+    /*
+     * Draw position handlers
+     */
     if (this.handlers.length !== 0) {
       let oldEltX = null,
         oldEltY = null;
       positionHandlers = this.handlers.map((elt, i) => {
-         let posHand = <rect className="position-handler" x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.handlerParams.cubeSize} height={this.handlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
+        let posHand = <rect className="position-handler" x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.handlerParams.cubeSize} height={this.handlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
         oldEltX = elt.x ? elt : oldEltX;
         oldEltY = elt.y ? elt : oldEltY;
         return posHand;
       });
     }
 
+    /*
+     * Draw curve handlers
+     */
     if (this.curveHandlers.length !== 0) {
       curveHandlers = this.curveHandlers.map((elt, i) => {
         return <circle className="curve-handler" cx={elt.x} cy={elt.y} r={this.handlerParams.rayon} data-id={elt.index} data-pos={elt.pos} key={i}></circle>;
@@ -183,10 +274,10 @@ let DrawContainer = React.createClass({
       // Draw line between curve modifier and it's origin
       curvePointToOrigin = this.curveHandlers.map((elt, i) => {
         let xStart = elt.x,
-        yStart = elt.y,
-        xEnd = 0,
-        yEnd = 0;
-        if(elt.pos === 1){
+          yStart = elt.y,
+          xEnd = 0,
+          yEnd = 0;
+        if (elt.pos === 1) {
           xEnd = this.state.paths.controls[elt.index - 1].x;
           yEnd = this.state.paths.controls[elt.index - 1].y;
         } else {
@@ -195,33 +286,60 @@ let DrawContainer = React.createClass({
         }
         let newPathToOrigin = ["M", xStart, yStart, "L", xEnd, yEnd].join(" ");
         return <path d={newPathToOrigin}></path>
+        });
+      }
+
+      /*
+       * Draw middlePaths
+       */
+      let middlePathsSize = this.middlePaths.length;
+      middlePaths = this.middlePaths.map(function(elt, i) {
+        if (middlePathsSize - 1 === i) {
+          return;
+        }
+        let classIndex = "overLapPath overLapPath-" + elt.index,
+          path = ["M", elt.xStart, elt.yStart, elt.command].join(" ") + " ";
+
+        path += (elt.x1 ? [elt.x1, elt.y1].join(" ") : "") + " ";
+        path += (elt.x2 ? [elt.x2, elt.y2].join(" ") : "") + " ";
+
+        path += [elt.xEnd, elt.yEnd].join(" ");
+        return (
+          <path d={path} key={i} className={classIndex}></path>
+          )
       });
+
+
+      /*
+       * Define SVG defs
+       */
+
+      defs = '<filter id="blurred" filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="400">';
+      defs += '<feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>';
+      defs += '<feMerge>';
+      defs += '<feMergeNode in="coloredBlur"/>';
+      defs += '<feMergeNode in="SourceGraphic"/>';
+      defs += '</feMerge>';
+      defs += '</filter>';
+
+      return (
+        <div id="draw-container" className="draw-container">
+          <svg ref="svgElt" viewBox="0 0 80 80" width="100%" height="100%" fill="currentcolor" className="svg-style">
+            <defs dangerouslySetInnerHTML={{
+          __html: defs
+        }}>
+            </defs>
+            <rect x="0" y="0" width="100%" height="100%" fill="black"/>
+            {paths}
+            {middlePaths}
+            {curvePointToOrigin}
+            {positionHandlers}
+            {curveHandlers}
+            
+          </svg>
+        </div>
+        )
     }
+  });
 
-    defs = '<filter id="blurred" filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="400">';
-    defs += '<feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>';
-    defs += '<feMerge>';
-    defs += '<feMergeNode in="coloredBlur"/>';
-    defs += '<feMergeNode in="SourceGraphic"/>';
-    defs += '</feMerge>';
-    defs += '</filter>';
-
-    return (
-      <div id="draw-container" className="draw-container">
-        <svg ref="svgElt" viewBox="0 0 80 80" width="100%" height="100%" fill="currentcolor" className="svg-style">
-        <defs dangerouslySetInnerHTML={{__html: defs}}>
-          
-        </defs>
-          <rect x="0" y="0" width="100%" height="100%" fill="black"/>
-          {paths}
-          {curvePointToOrigin}
-          {positionHandlers}
-          {curveHandlers}
-          
-        </svg>
-      </div>
-      )
-  }
-});
-
-module.exports = DrawContainer;
+  module.exports = DrawContainer;

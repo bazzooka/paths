@@ -3,10 +3,19 @@ $tronBlue: #09C1BF;
 body{
 	margin: 0;
 	padding: 0;
+	position: absolute;
+    height: 100%;
+    width: 100%;
 }
 
 * {
 	box-sizing: border-box;
+}
+
+.index-container, .master-wrapper, .draw-container{
+	position: relative;
+	height: 100%;
+    width: 100%;
 }
 
 .master-wrapper{
@@ -26,6 +35,8 @@ body{
 	display:block;
 	margin:auto;
 	overflow:visible;
+	position: relative;
+    height: 100%;
 }
 
 path{
@@ -53,4 +64,9 @@ path{
 	filter: url('#blurred');
 	stroke: white;
     stroke-width: 0.25;
+}
+
+.overLapPath.selected{
+	stroke: $tronBlue;
+	stroke-width: 0.5;
 }
