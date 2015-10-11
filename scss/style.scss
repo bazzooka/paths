@@ -37,6 +37,10 @@ body{
 
 .params-container{
 	flex: 1;
+}
+
+.path-commander{
+	flex: 1;
 
 	.row {
 		display: flex;
@@ -63,6 +67,11 @@ body{
 				color: $tronBlue;
 			}
 		}
+	}
+
+	.addRow{
+		text-align: center;
+		padding: 1rem;
 	}
 
 	.command{

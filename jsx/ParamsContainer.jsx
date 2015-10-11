@@ -9,7 +9,9 @@ let ParamsContainer = React.createClass({
 
   render: function() {
     return (
-      <PathCommander ref="pathCommander" onPathChange={this.props.onPathChange}/>
+    	<div className="params-container">
+      		<PathCommander ref="pathCommander" onPathChange={this.props.onPathChange}/>
+      	</div>
       )
   }
 

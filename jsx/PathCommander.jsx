@@ -97,9 +97,9 @@ let PathCommander = React.createClass({
 
       // <Row command="M" ref="command-" onChange={this.onChange} />
       return (
-        <div id="params-container" className="params-container">
+        <div id="path-commander" className="path-commander">
 	        {commands}
-	        <div className="addRow" onClick={this.addRow}>ADD ROW</div>
+	        <div className="addRow" onClick={this.addRow}>+ ADD POINT</div>
 	      </div>
         )
     }
