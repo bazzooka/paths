@@ -57,9 +57,11 @@ let H_Command = React.createClass({
 
   render: function() {
     return (
-      <div className="">
-          <label>x</label>
-          <input type="number" ref="x" value={this.state.x} onChange={this.updatePath} />
+      <div className="entries-container">
+        <div className="entry">
+            <label>x</label>
+            <input type="number" ref="x" value={this.state.x} onChange={this.updatePath} />
+          </div>
         </div>
       )
   }

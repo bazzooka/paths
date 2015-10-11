@@ -12,9 +12,13 @@ let ParamsContainer = React.createClass({
           "y": "20"
         },
         {
-          "command": "L",
+          "command": "C",
           "x": "20",
-          "y": "20"
+          "y": "20",
+          "x1": "20",
+          "y1": "20",
+          "x2": "20",
+          "y2": "20"
         }
       ]
     }
@@ -91,8 +95,9 @@ let ParamsContainer = React.createClass({
         let ref = "command-" + index;
         return (
           <div key={ref}>
-            <Row command={command.command} x={command.x} y={command.y} ref={ref} onParamsChange={this.onParamsChange} />
-            <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
+            <Row command={command.command} x={command.x} y={command.y} ref={ref} onParamsChange={this.onParamsChange}>
+              <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
+            </Row>
           </div>
           )
         });

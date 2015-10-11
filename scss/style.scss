@@ -1,4 +1,8 @@
 $tronBlue: #09C1BF;
+$rowActiveBg: #213535;
+$inputBg: #03403F;
+$inputColor: #0CFFFC;
+$labelActive: #008481;
 
 body{
 	margin: 0;
@@ -8,6 +12,7 @@ body{
     width: 100%;
     background: black;
     color: white;
+    font-family: 'Roboto', sans-serif;
 }
 
 * {
@@ -32,7 +37,83 @@ body{
 
 .params-container{
 	flex: 1;
+
+	.row {
+		display: flex;
+		justify-content: space-between;
+
+		input, select{
+			background-color: black;
+			color: white;
+		}
+
+		&.active{
+			background-color: $rowActiveBg;
+
+			input, select {
+				background-color: $rowActiveBg;
+				&:focus, &:active{
+					background: $inputBg;
+			    	color: $inputColor;
+			    	outline: 0;
+				}
+			}
+
+			select, label {
+				color: $tronBlue;
+			}
+		}
+	}
+
+	.command{
+		display: flex;
+		align-self: baseline;
+	}
+
+	.entries-container{
+    	display: flex;
+    	flex-wrap: wrap;
+    	justify-content: space-around;
+    	flex-grow: 1;
+    	align-self: baseline;
+	}
+
+	.entry{
+		display: flex;
+		align-self: flex-end;
+
+		input, label, select{
+			align-self: baseline;
+		}
+	}
+
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+    	/* display: none; <- Crashes Chrome on hover */
+    	-webkit-appearance: none;
+	    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+	}
+
+	input[type="number"] {
+	    font-size: 1rem;
+	    width: 3.5rem;
+	    border: none;
+	    margin: 0 5px;
+	    padding: 5px 0px;
+	}
+
+	select {
+		font-size: 1rem;
+		border: none;
+		-webkit-appearance: none;
+		width: 30px;
+		padding-left: 5px;
+		border-radius: 0;
+		align-self: baseline;
+	}
 }
+
+
 
 .svg-style{
 	display:block;

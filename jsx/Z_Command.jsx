@@ -13,8 +13,11 @@ let Z_Command = React.createClass({
 
   render: function() {
     return (
-      <div className="">
+      <div className="entries-container">
+        <div className="entry">
+          <div></div>
         </div>
+      </div>
       )
   }
 });

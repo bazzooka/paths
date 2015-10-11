@@ -89,16 +89,24 @@ let S_Command = React.createClass({
 
   render: function() {
     return (
-      <div className="">
+      <div className="entries-container">
+        <div className="entry">
           <label>x2</label>
           <input type="number" ref="x2" value={this.state.x2} onChange={this.updatePath} />
+        </div>
+        <div className="entry">
           <label>y2</label>
           <input type="number" ref="y2" value={this.state.y2} onChange={this.updatePath}/>
+        </div>
+        <div className="entry">
           <label>x</label>
           <input type="number" ref="x" value={this.state.x} onChange={this.updatePath} />
+        </div>
+        <div className="entry">
           <label>y</label>
           <input type="number" ref="y" value={this.state.y} onChange={this.updatePath}/>
         </div>
+      </div>
       )
   }
 });

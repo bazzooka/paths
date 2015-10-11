@@ -34,6 +34,13 @@ let Row = React.createClass({
     this.refs.coordonnees.onDrawChanged(position);
   },
 
+  onFocus: function(){
+    Array.prototype.forEach.call(document.getElementsByClassName('row'), function(elt){
+      elt.classList.remove("active");
+    })
+    this.refs.row.getDOMNode().classList.add("active");
+  },
+
   render: function() {
     let coordonnees = null,
       options = null,
@@ -45,31 +52,31 @@ let Row = React.createClass({
 
     switch (this.state.command) {
       case "M":
-        coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "L":
-        coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "H":
-        coordonnees = <H_Command  x={this.props.x} ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <H_Command  x={this.props.x} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "V":
-        coordonnees = <V_Command  y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <V_Command  y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "Z":
-        coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} />;
+        coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "C":
-        coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "S":
-        coordonnees = <S_Command x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <S_Command x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "Q":
-        coordonnees = <Q_Command x1={this.props.x1} y1={this.props.y1} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <Q_Command x1={this.props.x1} y1={this.props.y1} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "T":
-        coordonnees = <T_Command x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate}/>;
+        coordonnees = <T_Command x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
 
     }
@@ -79,13 +86,16 @@ let Row = React.createClass({
       });
 
       return (
-        <div className="row">
-        <div className="command">
-          <select onChange={this.commandChange} value={me.state.command}>
-            {options}
-          </select>
-        </div>
-        {coordonnees}
+        <div className="row" ref="row">
+          <div className="command">
+            <select onChange={this.commandChange} value={me.state.command}>
+              {options}
+            </select>
+          </div>
+          {coordonnees}
+          <div className="entry">
+            {this.props.children}
+          </div>
       </div>
         )
     }
