@@ -92,7 +92,7 @@ let DrawContainer = React.createClass({
     if (e.srcElement.classList.contains("position-handler") && this.dragParams.isDragging) {
       this.dragParams.dragElt.classList.add("selected");
 
-      if (this.dragParams.dragIndex !== 0) {
+      if (this.dragParams.dragIndex !== "0") {
         this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add("selected");
       }
     }
@@ -301,7 +301,7 @@ let DrawContainer = React.createClass({
           yEnd = this.state.paths.controls[elt.index].y;
         }
         let newPathToOrigin = ["M", xStart, yStart, "L", xEnd, yEnd].join(" ");
-        return <path d={newPathToOrigin}></path>
+        return <path d={newPathToOrigin} key={i}></path>
         });
       }
 
