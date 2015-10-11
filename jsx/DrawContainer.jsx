@@ -1,4 +1,5 @@
 import React from 'react';
+import SVG_Grid from './SVG_Grid.jsx';
 
 let DrawContainer = React.createClass({
   handlers: [], // List all position handlers
@@ -15,6 +16,11 @@ let DrawContainer = React.createClass({
     cubeSize: 2,
     halfSize: 1,
     rayon: 0.75,
+  },
+
+  svgParams: {
+    viewBox_w: 80,
+    viewBox_h: 80
   },
 
   getInitialState: function() {
@@ -64,24 +70,30 @@ let DrawContainer = React.createClass({
         me.dragParams.dragElt = null;
       }
     });
+
+    window.addEventListener("resize", (e) =>{
+      me.resize();
+    })
+
+    me.resize();
   },
 
   updateHandlersColors: function(e) {
     // Remove all selected class from position-handlers
-      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler'), function(elt) {
-        elt.classList.remove('selected');
-      });
+    Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler'), function(elt) {
+      elt.classList.remove('selected');
+    });
 
-       // Desactive all overLapPath
-      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath'), function(elt) {
-        elt.classList.remove('selected');
-      });
+    // Desactive all overLapPath
+    Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath'), function(elt) {
+      elt.classList.remove('selected');
+    });
 
     if (e.srcElement.classList.contains("position-handler") && this.dragParams.isDragging) {
       this.dragParams.dragElt.classList.add("selected");
 
-      if(this.dragParams.dragIndex !== 0){
-        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add("selected");  
+      if (this.dragParams.dragIndex !== 0) {
+        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add("selected");
       }
     }
   },
@@ -238,6 +250,10 @@ let DrawContainer = React.createClass({
 
   },
 
+  resize: function(e) {
+    this.refs.grid.resize(this.svgParams.viewBox_w, this.svgParams.viewBox_h);
+  },
+
   render: function() {
     var paths = null,
       positionHandlers = null,
@@ -322,6 +338,8 @@ let DrawContainer = React.createClass({
       defs += '</feMerge>';
       defs += '</filter>';
 
+      let viewBox = [0, 0, this.svgParams.viewBox_w, this.svgParams.viewBox_h].join(" ");
+
       return (
         <div id="draw-container" className="draw-container">
           <svg ref="svgElt" viewBox="0 0 80 80" width="100%" height="100%" fill="currentcolor" className="svg-style">
@@ -330,6 +348,7 @@ let DrawContainer = React.createClass({
         }}>
             </defs>
             <rect x="0" y="0" width="100%" height="100%" fill="black"/>
+            <SVG_Grid ref="grid"/>
             {paths}
             {middlePaths}
             {curvePointToOrigin}

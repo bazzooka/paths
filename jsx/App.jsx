@@ -3,6 +3,13 @@ import DrawContainer from './DrawContainer.jsx';
 import ParamsContainer from './ParamsContainer.jsx';
 
 var App = React.createClass({
+
+	componentDidMount: function(){
+		document.addEventListener("resize", function(e){
+			this.refs.drawContainer.resize(e);
+		});
+	},
+
 	onPathChange: function(newPath) {
 		this.refs.drawContainer.pathChanged(newPath);
 	},

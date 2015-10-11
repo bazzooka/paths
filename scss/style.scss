@@ -6,6 +6,8 @@ body{
 	position: absolute;
     height: 100%;
     width: 100%;
+    background: black;
+    color: white;
 }
 
 * {
@@ -25,6 +27,7 @@ body{
 
 .draw-container{
 	flex: 2;
+	padding: 0.5rem;
 }
 
 .params-container{
@@ -69,4 +72,17 @@ path{
 .overLapPath.selected{
 	stroke: $tronBlue;
 	stroke-width: 0.5;
+}
+
+.grid_v_h{
+	stroke-width: 1px;
+	vector-effect: non-scaling-stroke;
+	opacity: 0.3;
+}
+
+.grid_large{
+	fill: transparent;
+	stroke-width: 1.2px;
+	vector-effect: non-scaling-stroke;
+	opcaity: 0.5;
 }
