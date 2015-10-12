@@ -1,4 +1,5 @@
 import React from 'react';
+import SVGUtils from '../js/SVGUtils.js';
 import SVG_Grid from './SVG_Grid.jsx';
 
 let DrawContainer = React.createClass({

@@ -1,4 +1,5 @@
 import React from 'react';
+import SVGUtils from '../js/SVGUtils.js';
 import M_Command from './M_Command.jsx';
 import L_Command from './L_Command.jsx';
 import H_Command from './H_Command.jsx';
@@ -14,9 +15,19 @@ let Row = React.createClass({
 
   componentDidMount: function() {
     this.setState({
-      command: this.props.command
+      command: this.props.command,
+      x: this.props.x,
+      y: this.props.y
     });
   },
+
+/*  componentWillUpdate: function(newProps){
+    this.setState({
+      command: newProps.command,
+      x: newProps.x,
+      y: newProps.y
+    })
+  },*/
 
   commandChange: function(e) {
     this.setState({
@@ -41,6 +52,11 @@ let Row = React.createClass({
     this.refs.row.getDOMNode().classList.add("active");
   },
 
+  getNextPointCoord: function(){
+    let lastPos = SVGUtils.getLastPosFrom(this.props.getControlsPoint().controls, this.props.index);
+    return lastPos;
+  },
+
   render: function() {
     let coordonnees = null,
       options = null,
@@ -49,8 +65,10 @@ let Row = React.createClass({
     if (!this.state) {
       return null;
     }
+            //console.log(this.props.command);
+    //console.log(this.props.getControlsPoint());
 
-    switch (this.state.command) {
+    switch (this.props.command) {
       case "M":
         coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
@@ -58,10 +76,10 @@ let Row = React.createClass({
         coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "H":
-        coordonnees = <H_Command  x={this.props.x} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+        coordonnees = <H_Command  x={this.props.x || this.getNextPointCoord().x} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "V":
-        coordonnees = <V_Command  y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+        coordonnees = <V_Command  y={this.props.y || this.getNextPointCoord().y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
         break;
       case "Z":
         coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;

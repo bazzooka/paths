@@ -7,13 +7,22 @@ let PathCommander = React.createClass({
       allRows: [
         {
           "command": "M",
-          "x": "15",
+          "x": "16",
           "y": "20"
         },
         {
           "command": "C",
-          "x": "20",
+          "x": "21",
           "y": "20",
+          "x1": "20",
+          "y1": "20",
+          "x2": "20",
+          "y2": "20"
+        },
+        {
+          "command": "L",
+          "x": "41",
+          "y": "40",
           "x1": "20",
           "y1": "20",
           "x2": "20",
@@ -52,10 +61,13 @@ let PathCommander = React.createClass({
   },
 
   deleteRow: function(index, e) {
-    let newRows = this.state.allRows.splice(index, 1);
+    let newRows = this.state.allRows;
+
+    //newRows.splice(index, 1);
+    this.state.allRows.splice(index, 1);
     this.setState(
       {
-        allRows: newRows
+        allRows: this.state.allRows
       },
       function() {
         this.onParamsChange();
@@ -87,7 +99,7 @@ let PathCommander = React.createClass({
         let ref = "command-" + index;
         return (
           <div key={ref}>
-	            <Row command={command.command} x={command.x} y={command.y} ref={ref} onParamsChange={this.onParamsChange}>
+	            <Row command={command.command} x={command.x} y={command.y} ref={ref} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} index={index}>
 	              <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
 	            </Row>
 	          </div>
