@@ -319,7 +319,9 @@ let DrawContainer = React.createClass({
         path += (elt.x1 ? [elt.x1, elt.y1].join(" ") : "") + " ";
         path += (elt.x2 ? [elt.x2, elt.y2].join(" ") : "") + " ";
 
-        path += [elt.xEnd, elt.yEnd].join(" ");
+        path += (elt.xEnd && elt.command !== 'V')? [elt.xEnd, " "].join(" ") : " ";
+        path += (elt.yEnd && elt.command !== 'H')? [elt.yEnd, " "].join(" ") : " ";
+
         return (
           <path d={path} key={i} className={classIndex}></path>
           )
