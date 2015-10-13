@@ -154,10 +154,24 @@ path{
 }
 
 .curve-handler{
+	opacity: 0;
+	transition: opacity 0.5s;
 	fill: $tronBlue;
 	filter: url('#blurred');
 	stroke: white;
     stroke-width: 0.25;
+
+    &.selected {
+    	opacity: 1;
+    }
+}
+
+.path-to-origin{
+	opacity: 0;
+	transition: opacity 0.5s;
+	&.selected {
+		opacity: 1;
+	}
 }
 
 .overLapPath{
