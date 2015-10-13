@@ -7,6 +7,10 @@ let ParamsContainer = React.createClass({
     this.refs.pathCommander.onDrawChanged(position);
   },
 
+  onSelectHandler: function(index){
+    this.refs.pathCommander.onSelectHandler(index);
+  },
+
   render: function() {
     return (
     	<div className="params-container">

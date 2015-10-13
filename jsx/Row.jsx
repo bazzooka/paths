@@ -57,6 +57,14 @@ let Row = React.createClass({
     return lastPos;
   },
 
+  activeRow: function(active){
+    if(active){
+      this.refs.row.getDOMNode().classList.add("active");
+    } else {
+      this.refs.row.getDOMNode().classList.remove("active");
+    }
+  },
+
   render: function() {
     let coordonnees = null,
       options = null,

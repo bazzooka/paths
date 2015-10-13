@@ -97,6 +97,8 @@ let DrawContainer = React.createClass({
         this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add("selected");
       }
     }
+
+    this.props.onSelectHandler(this.dragParams.dragIndex);
   },
 
   updatePosition: function(x, y) {
@@ -182,6 +184,7 @@ let DrawContainer = React.createClass({
       /*
        * Determine each segments of master path
        */
+       let last
       switch (path.command) {
         case "M": this.middlePaths.push({
             xStart: path.x,

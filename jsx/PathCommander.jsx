@@ -91,6 +91,18 @@ let PathCommander = React.createClass({
 
   },
 
+  onSelectHandler: function(index){
+    for(let row in this.refs){
+      if(this.refs.hasOwnProperty(row)){
+        if(this.refs[row].props.index === parseInt(index, 10)){
+          this.refs[row].activeRow(true);
+        } else {
+          this.refs[row].activeRow(false);
+        }
+      }
+    }
+  },
+
   render: function() {
     let commands = null;
 

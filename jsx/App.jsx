@@ -18,11 +18,15 @@ var App = React.createClass({
 		this.refs.paramsContainer.onDrawChanged(position);
 	},
 
+	onSelectHandler: function(index){
+		this.refs.paramsContainer.onSelectHandler(index);
+	},
+
 	render: function(){
 		return (
 
 			<div className="master-wrapper">
-				<DrawContainer ref="drawContainer" onDrawChanged={this.onDrawChanged}/>
+				<DrawContainer ref="drawContainer" onDrawChanged={this.onDrawChanged} onSelectHandler={this.onSelectHandler}/>
 				<ParamsContainer onPathChange={this.onPathChange} ref="paramsContainer" />
 			</div>
 		)
