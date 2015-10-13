@@ -160,9 +160,12 @@ path{
     stroke-width: 0.25;
 }
 
-.overLapPath.selected{
-	stroke: $tronBlue;
-	stroke-width: 0.5;
+.overLapPath{
+	fill: none;
+	.selected{
+		stroke: $tronBlue;
+		stroke-width: 0.5;
+	}
 }
 
 .grid_v_h{
