@@ -1,9 +1,10 @@
 import React from 'react';
+import ParamsPanel from './ParamsPanel.jsx';
 import PathCommander from './PathCommander.jsx';
 
 let ParamsContainer = React.createClass({
 
-  onDrawChanged: function(position) {
+  onDrawChanged: function(position) { 
     this.refs.pathCommander.onDrawChanged(position);
   },
 
@@ -14,7 +15,9 @@ let ParamsContainer = React.createClass({
   render: function() {
     return (
     	<div className="params-container">
-      		<PathCommander ref="pathCommander" onPathChange={this.props.onPathChange}/>
+          <ParamsPanel title="Commands" isOpen="true">
+      		  <PathCommander ref="pathCommander" onPathChange={this.props.onPathChange} />
+          </ParamsPanel>
       	</div>
       )
   }

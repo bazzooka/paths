@@ -26,17 +26,13 @@ body{
 }
 
 .master-wrapper{
-	display: flex;
-	justify-content: space-between;
+
 }
 
 .draw-container{
-	flex: 2;
 	padding: 0.5rem;
-}
-
-.params-container{
-	flex: 1;
+    position: fixed;
+    width: 75%;
 }
 
 .path-commander{
@@ -194,3 +190,27 @@ path{
 	vector-effect: non-scaling-stroke;
 	opcaity: 0.5;
 }
+
+.params-container{
+	width: 25%;
+    position: absolute;
+    right: 0;
+    padding: 0.5rem;
+
+    .param-panel {
+    	border: solid 1px white;
+    }
+
+	.title-container {
+	    display: flex;
+	    justify-content: space-between;
+	    padding: 0 1rem;
+	}
+
+	.panel-content{
+		padding: 0 1rem;
+		overflow: hidden;
+		transition: max-height 0.5s;
+	}
+}
+

@@ -32,6 +32,10 @@ let PathCommander = React.createClass({
     }
   },
 
+  componentDidMount: function(){
+    this.isReady = false;
+  },
+
   onDrawChanged: function(position) {
     this.refs["command-" + position.index].onDrawChanged(position);
   },
@@ -44,6 +48,11 @@ let PathCommander = React.createClass({
     }, function() {});
 
     this.props.onPathChange(path);
+
+    if(!this.isReady){
+      this.isReady = true;
+      this.props.onComponentDidMount();
+    }
 
   },
 
