@@ -22,12 +22,16 @@ var App = React.createClass({
 		this.refs.paramsContainer.onSelectHandler(index);
 	},
 
+	imageUploaded: function(url){
+		this.refs.drawContainer.imageUploaded(url);
+	},
+
 	render: function(){
 		return (
 
 			<div className="master-wrapper">
 				<DrawContainer ref="drawContainer" onDrawChanged={this.onDrawChanged} onSelectHandler={this.onSelectHandler}/>
-				<ParamsContainer onPathChange={this.onPathChange} ref="paramsContainer" />
+				<ParamsContainer onPathChange={this.onPathChange} ref="paramsContainer" imageUploaded={this.imageUploaded}/>
 			</div>
 		)
 	}

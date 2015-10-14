@@ -259,6 +259,10 @@ let DrawContainer = React.createClass({
 
   },
 
+  imageUploaded: function(url){
+    console.log("Image uploaded");
+  },
+
   resize: function(e) {
     this.refs.grid.resize(this.svgParams.viewBox_w, this.svgParams.viewBox_h);
   },

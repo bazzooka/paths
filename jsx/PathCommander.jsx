@@ -53,7 +53,6 @@ let PathCommander = React.createClass({
       this.isReady = true;
       this.props.onComponentDidMount();
     }
-
   },
 
   getControlPoints: function() {
