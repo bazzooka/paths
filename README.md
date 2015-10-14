@@ -3,7 +3,7 @@
 ## A simple SVG path editor
 
 ## TODO
-- Add Grid
+- Too many callback => Use Redux !
 - Add image
 - Possibility to create multiple path
 - Drag & drop command in parameter
