@@ -2,6 +2,7 @@ import React from 'react';
 import Row from './Row.jsx';
 
 import PathStore from '../js/stores/PathStore';
+import DrawStoreConstants from '../js/constants/DrawStoreConstants';
 import DrawStoreActions from '../js/actions/DrawStoreActions';
 
 
@@ -41,8 +42,14 @@ let PathCommander = React.createClass({
     PathStore.addChangeListener(this._onChange);   
   },
 
-  _onChange: function(){
-    this.onDrawChanged(PathStore.getLastPosition());
+  _onChange: function(param){
+    switch(param){
+      case DrawStoreConstants.DRAW_CHANGE : 
+        this.onDrawChanged(PathStore.getLastPosition());
+        break;
+      case DrawStoreConstants.DRAW_SELECTION_CHANGE : 
+        this.onSelectHandler(PathStore.getLastSelection())
+    }
   },
 
   onDrawChanged: function(position) {

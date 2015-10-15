@@ -3,6 +3,7 @@ import SVGUtils from '../js/SVGUtils.js';
 import SVG_Grid from './SVG_Grid.jsx';
 
 import DrawStore from '../js/stores/DrawStore';
+import DrawStoreConstants from '../js/constants/DrawStoreConstants';
 import DrawStoreActions from '../js/actions/DrawStoreActions';
 
 let DrawContainer = React.createClass({
@@ -84,8 +85,16 @@ let DrawContainer = React.createClass({
     me.resize();
   },
 
-  _onChange: function(){
-    this.pathChanged(DrawStore.getPath());
+  _onChange: function(param){
+    switch(param){
+      case DrawStoreConstants.DRAW_SELECTION_CHANGE :
+        // TODO COLOR HANDLER WITH PATH COMMANDER SELECTION
+        break;
+      case DrawStoreConstants.PATH_CHANGE : 
+        this.pathChanged(DrawStore.getPath());
+        break;
+    }
+    
   },
 
   updateHandlersColors: function(e) {
@@ -112,7 +121,7 @@ let DrawContainer = React.createClass({
     }
 
     // Select row in pathCommander
-    this.props.onSelectHandler(this.dragParams.dragIndex);
+    DrawStoreActions.drawSelectionChange(this.dragParams.dragIndex);
 
   },
 

@@ -20,6 +20,20 @@ let DrawStoreActions = {
 			actionType: DrawStoreConstants.DRAW_CHANGE,
 			data: data
 		});
+	},
+
+	drawSelectionChange: function(data){
+		AppDispatcher.handleViewAction({
+			actionType: DrawStoreConstants.DRAW_SELECTION_CHANGE,
+			data: data
+		})
+	},
+
+	paramSelectionChange: function(data){
+		AppDispatcher.handleViewAction({
+			actionType: DrawStoreConstants.PARAM_SELECTION_CHANGE,
+			data: data
+		})
 	}
 }
 

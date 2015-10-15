@@ -3,14 +3,14 @@ import DrawStoreConstants from '../constants/DrawStoreConstants';
 import {EventEmitter} from 'events';
 
 let _path = {},
-	_lastPosition = {};
+	_lastSelection = {};
 
 let loadPath = function(data){
 	_path = data;
 }
 
-let loadLastPosition = function(data){
-	_lastPosition = data;
+let loadLastSelection = function(data){
+	_lastSelection = data;
 }
 
 let DrawStore = Object.assign({}, EventEmitter.prototype, {
@@ -18,12 +18,12 @@ let DrawStore = Object.assign({}, EventEmitter.prototype, {
 		return _path;
 	},
 
-	getLastPosition: function(){
+	getLastSelection: function(){
 		return _lastPosition;
 	},
 
-	emitChange: function(){
-		this.emit('change');
+	emitChange: function(param){
+		this.emit('change', param);
 	},
 
 	addChangeListener: function(callback){
@@ -42,11 +42,16 @@ DrawStore.dispatcherIndex = AppDispatcher.register(function(payload){
 	switch(action.actionType){
 		case DrawStoreConstants.PATH_CHANGE:
 			loadPath(action.data);
+			DrawStore.emitChange(DrawStoreConstants.PATH_CHANGE);
+			break;
+		case DrawStoreConstants.PATH_SELECTION_CHANGE:
+			loadPath(action.data);
+			DrawStore.emitChange(DrawStoreConstants.PATH_SELECTION_CHANGE); 
 			break;
 		default:
 			return true;
 	}
-	DrawStore.emitChange();
+	
 	return true;
 });
 

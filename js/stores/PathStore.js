@@ -2,8 +2,12 @@ import AppDispatcher from '../dispatcher/AppDispatcher.js';
 import DrawStoreConstants from '../constants/DrawStoreConstants';
 import {EventEmitter} from 'events';
 
-let _path = {},
-	_lastPosition = {};
+let _lastPosition = {},
+	_lastSelection = {};
+
+let loadLastSelection = function(data){
+	_lastSelection = data;
+}
 
 let loadLastPosition = function(data){
 	_lastPosition = data;
@@ -14,8 +18,12 @@ let PathStore = Object.assign({}, EventEmitter.prototype, {
 		return _lastPosition;
 	},
 
-	emitChange: function(){
-		this.emit('change');
+	getLastSelection: function(){
+		return _lastSelection;
+	},
+
+	emitChange: function(param){
+		this.emit('change', param);
 	},
 
 	addChangeListener: function(callback){
@@ -33,16 +41,17 @@ PathStore.dispatcherIndex = AppDispatcher.register(function(payload){
 
 	switch(action.actionType){
 		case DrawStoreConstants.DRAW_CHANGE:
-			//AppDispatcher.waitFor([ "ID_2"]
-			//, function(){
-				console.log(AppDispatcher._isPending);
-				loadLastPosition(action.data);
-			//});
+			loadLastPosition(action.data);
+			PathStore.emitChange(DrawStoreConstants.DRAW_CHANGE);
+			break;
+		case DrawStoreConstants.DRAW_SELECTION_CHANGE:
+			loadLastSelection(action.data);
+			PathStore.emitChange(DrawStoreConstants.DRAW_SELECTION_CHANGE);
 			break;
 		default:
 			return true;
 	}
-	PathStore.emitChange();
+	
 	return true;
 });
 

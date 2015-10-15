@@ -11,7 +11,7 @@ var App = React.createClass({
 	},
 
 	onSelectHandler: function(index){
-		this.refs.paramsContainer.onSelectHandler(index);
+		//this.refs.paramsContainer.onSelectHandler(index);
 	},
 
 	imageUploaded: function(url){
