@@ -2,6 +2,9 @@ import React from 'react';
 import SVGUtils from '../js/SVGUtils.js';
 import SVG_Grid from './SVG_Grid.jsx';
 
+import DrawStore from '../js/stores/DrawStore';
+import DrawStoreActions from '../js/actions/DrawStoreActions';
+
 let DrawContainer = React.createClass({
   handlers: [], // List all position handlers
   curveHandlers: [], // List curve handler
@@ -32,6 +35,8 @@ let DrawContainer = React.createClass({
 
   componentDidMount: function() {
     let me = this;
+
+    DrawStore.addChangeListener(this._onChange);
 
     me.svgElt = this.refs.svgElt.getDOMNode();
 
@@ -79,6 +84,10 @@ let DrawContainer = React.createClass({
     me.resize();
   },
 
+  _onChange: function(){
+    this.pathChanged(DrawStore.getPath());
+  },
+
   updateHandlersColors: function(e) {
     // Remove all selected class from position-handlers and overLapPath
     let hiddenElements = ['.position-handler', '.overLapPath', '.curve-handler', '.path-to-origin'].join(',');
@@ -121,7 +130,7 @@ let DrawContainer = React.createClass({
       newPosition.index = this.dragParams.dragIndex;
       newPosition.dragCurveIndex = this.dragParams.dragCurveIndex;
 
-      this.props.onDrawChanged(newPosition);
+      DrawStoreActions.drawChange(newPosition);
 
     } else {
       if (this.dragParams.command !== 'V') {
@@ -136,7 +145,7 @@ let DrawContainer = React.createClass({
         newY = null;
       }
 
-      this.props.onDrawChanged({
+      DrawStoreActions.drawChange({
         x: newX,
         y: newY,
         index: this.dragParams.dragIndex

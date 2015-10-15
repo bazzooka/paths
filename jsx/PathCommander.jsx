@@ -1,6 +1,10 @@
 import React from 'react';
 import Row from './Row.jsx';
 
+import PathStore from '../js/stores/PathStore';
+import DrawStoreActions from '../js/actions/DrawStoreActions';
+
+
 let PathCommander = React.createClass({
   getInitialState: function() {
     return {
@@ -34,10 +38,15 @@ let PathCommander = React.createClass({
 
   componentDidMount: function(){
     this.isReady = false;
+    PathStore.addChangeListener(this._onChange);   
+  },
+
+  _onChange: function(){
+    this.onDrawChanged(PathStore.getLastPosition());
   },
 
   onDrawChanged: function(position) {
-    this.refs["command-" + position.index].onDrawChanged(position);
+    position.index && this.refs["command-" + position.index ].onDrawChanged(position);
   },
 
   onParamsChange: function(controls) {
@@ -47,7 +56,7 @@ let PathCommander = React.createClass({
       allRows: path.controls
     }, function() {});
 
-    this.props.onPathChange(path);
+     DrawStoreActions.pathChange(path);
 
     if(!this.isReady){
       this.isReady = true;

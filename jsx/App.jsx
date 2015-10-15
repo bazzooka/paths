@@ -10,14 +10,6 @@ var App = React.createClass({
 		});
 	},
 
-	onPathChange: function(newPath) {
-		this.refs.drawContainer.pathChanged(newPath);
-	},
-
-	onDrawChanged: function(position){
-		this.refs.paramsContainer.onDrawChanged(position);
-	},
-
 	onSelectHandler: function(index){
 		this.refs.paramsContainer.onSelectHandler(index);
 	},
@@ -30,8 +22,8 @@ var App = React.createClass({
 		return (
 
 			<div className="master-wrapper">
-				<DrawContainer ref="drawContainer" onDrawChanged={this.onDrawChanged} onSelectHandler={this.onSelectHandler}/>
-				<ParamsContainer onPathChange={this.onPathChange} ref="paramsContainer" imageUploaded={this.imageUploaded}/>
+				<DrawContainer ref="drawContainer" onSelectHandler={this.onSelectHandler}/>
+				<ParamsContainer ref="paramsContainer" imageUploaded={this.imageUploaded}/>
 			</div>
 		)
 	}

@@ -1,0 +1,7 @@
+module.exports = {
+  PARAM_2_DRAW: "PARAM_2_DRAW",
+  PATH_CHANGE: "PATH_CHANGE",
+  DRAW_CHANGE: "DRAW_CHANGE"
+
+};
+

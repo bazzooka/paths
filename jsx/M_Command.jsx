@@ -28,7 +28,7 @@ let M_Command = React.createClass({
     let path = {
       path: "M " + this.state.x + " " + this.state.y,
       command: "M",
-      x: this.state.x,
+      x: this.state.x, 
       y: this.state.y
     }
   },
