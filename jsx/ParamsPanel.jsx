@@ -48,11 +48,10 @@ let ParamsPanel = React.createClass({
 	        	ref: "myRef"
 	        };*/
 	        return React.cloneElement(child, {
-	        	"onComponentDidMount": this.onReady
+	        	"onComponentDidMount": this.onReady,
+	        	"onResize": this.toggleOpen
 	        });
     	}.bind(this))
-
-//let children = this.props.children;
 
 		return (
 			<div ref="panel" className={panelClasses}>

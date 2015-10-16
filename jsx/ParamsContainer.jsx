@@ -12,7 +12,7 @@ let ParamsContainer = React.createClass({
   render: function() {
     return (
     	<div className="params-container">
-          <ParamsPanel title="Commands" isOpen="true">
+          <ParamsPanel ref="panel-command" title="Commands" isOpen="true">
       		  <PathCommander ref="pathCommander" />
           </ParamsPanel>
           <ParamsPanel title="Image" isOpen="true">

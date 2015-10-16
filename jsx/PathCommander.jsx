@@ -107,11 +107,13 @@ let PathCommander = React.createClass({
       "y": "10"
     });
 
+    
 
     this.setState({
       allRows: newRows
     }, function() {
       this.onParamsChange();
+      this.props.onResize("true");
     });
 
   },
