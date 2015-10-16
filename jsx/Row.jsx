@@ -9,6 +9,7 @@ import C_Command from './C_Command.jsx';
 import S_Command from './S_Command.jsx';
 import Q_Command from './Q_Command.jsx';
 import T_Command from './T_Command.jsx';
+import Command from './Command.jsx';
 
 
 let Row = React.createClass({
@@ -32,6 +33,8 @@ let Row = React.createClass({
   commandChange: function(e) {
     this.setState({
       command: e.currentTarget.value
+    }, function(){
+      this.refs.coordonnees.updatePath(true);
     });
   },
 
@@ -74,36 +77,38 @@ let Row = React.createClass({
             //console.log(this.props.command);
     //console.log(this.props.getControlsPoint());
 
-    switch (this.props.command) {
-      case "M":
-        coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "L":
-        coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "H":
-        coordonnees = <H_Command  x={this.props.x || this.getNextPointCoord().x} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "V":
-        coordonnees = <V_Command  y={this.props.y || this.getNextPointCoord().y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "Z":
-        coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "C":
-        coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "S":
-        coordonnees = <S_Command x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "Q":
-        coordonnees = <Q_Command x1={this.props.x1} y1={this.props.y1} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
-      case "T":
-        coordonnees = <T_Command x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
-        break;
+    // switch (this.props.command) {
+    //   case "M":
+    //     coordonnees = <M_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "L":
+    //     coordonnees = <L_Command  x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "H":
+    //     coordonnees = <H_Command  x={this.props.x || this.getNextPointCoord().x} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "V":
+    //     coordonnees = <V_Command  y={this.props.y || this.getNextPointCoord().y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "Z":
+    //     coordonnees = <Z_Command ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "C":
+    //     coordonnees = <C_Command  x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "S":
+    //     coordonnees = <S_Command x2={this.props.x2} y2={this.props.y2} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "Q":
+    //     coordonnees = <Q_Command x1={this.props.x1} y1={this.props.y1} x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
+    //   case "T":
+    //     coordonnees = <T_Command x={this.props.x} y={this.props.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />;
+    //     break;
 
-    }
+    // }
+
+ 
 
     options = ["M", "L", "H", "V", "Z", "C", "S", "Q", "T"].map((elt, i) => {
       return (<option value={elt} key={elt}>{elt}</option>)
@@ -116,7 +121,7 @@ let Row = React.createClass({
               {options}
             </select>
           </div>
-          {coordonnees}
+          <Command command={this.state.command || this.props.command} x1={this.props.x1 || this.getNextPointCoord().x} y1={this.props.y1  || this.getNextPointCoord().y} x2={this.props.x2 || this.getNextPointCoord().x} y2={this.props.y2  || this.getNextPointCoord().y} x={this.props.x || this.getNextPointCoord().x} y={this.props.y || this.getNextPointCoord().y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />
           <div className="entry">
             {this.props.children}
           </div>

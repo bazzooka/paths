@@ -101,8 +101,12 @@ let DrawContainer = React.createClass({
     this.hideAllHandlers();
 
     if(typeof(e) === "number"){
+      let allOverLap = this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath');
       this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler-' + e)[0].classList.add('selected');
-      this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (e+1))[0].classList.add('selected');
+      if(allOverLap.length > 1){
+        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (e+1))[0].classList.add('selected');
+      }
+      
 
       let activeClasses = ['.path-to-origin-' + e, '.curve-handler-' + e].join(', ');
         Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().querySelectorAll(activeClasses), function(elt) {
