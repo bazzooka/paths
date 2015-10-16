@@ -172,7 +172,7 @@ path{
 
 .overLapPath{
 	fill: none;
-	.selected{
+	&.selected{
 		stroke: $tronBlue;
 		stroke-width: 0.5;
 	}

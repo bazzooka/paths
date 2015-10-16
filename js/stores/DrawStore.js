@@ -19,7 +19,7 @@ let DrawStore = Object.assign({}, EventEmitter.prototype, {
 	},
 
 	getLastSelection: function(){
-		return _lastPosition;
+		return _lastSelection;
 	},
 
 	emitChange: function(param){
@@ -45,7 +45,7 @@ DrawStore.dispatcherIndex = AppDispatcher.register(function(payload){
 			DrawStore.emitChange(DrawStoreConstants.PATH_CHANGE);
 			break;
 		case DrawStoreConstants.PATH_SELECTION_CHANGE:
-			loadPath(action.data);
+			loadLastSelection(action.data);
 			DrawStore.emitChange(DrawStoreConstants.PATH_SELECTION_CHANGE); 
 			break;
 		default:

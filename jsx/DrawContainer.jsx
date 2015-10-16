@@ -87,8 +87,8 @@ let DrawContainer = React.createClass({
 
   _onChange: function(param){
     switch(param){
-      case DrawStoreConstants.DRAW_SELECTION_CHANGE :
-        // TODO COLOR HANDLER WITH PATH COMMANDER SELECTION
+      case DrawStoreConstants.PATH_SELECTION_CHANGE :
+        this.updateHandlersColors(DrawStore.getLastSelection());
         break;
       case DrawStoreConstants.PATH_CHANGE : 
         this.pathChanged(DrawStore.getPath());
@@ -98,31 +98,48 @@ let DrawContainer = React.createClass({
   },
 
   updateHandlersColors: function(e) {
+    this.hideAllHandlers();
+
+    if(typeof(e) === "number"){
+      this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler-' + e)[0].classList.add('selected');
+      this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (e+1))[0].classList.add('selected');
+
+      let activeClasses = ['.path-to-origin-' + e, '.curve-handler-' + e].join(', ');
+        Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().querySelectorAll(activeClasses), function(elt) {
+            elt.classList.add('selected');
+          });
+    } else {
+        if (e.srcElement.classList.contains('position-handler') && this.dragParams.isDragging) {
+        this.dragParams.dragElt.classList.add('selected');
+
+        if (this.dragParams.dragIndex !== '0') {
+          // Active Overlap
+          this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add('selected');
+        }
+      }
+
+      if ((e.srcElement.classList.contains('position-handler') && this.dragParams.isDragging) ||(e.srcElement.classList.contains('curve-handler'))) {
+        let activeClasses = ['.path-to-origin-' + this.dragParams.dragIndex, '.curve-handler-' + this.dragParams.dragIndex].join(', ');
+        Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().querySelectorAll(activeClasses), function(elt) {
+            elt.classList.add('selected');
+          });
+      }
+
+      // Select row in pathCommander
+      DrawStoreActions.drawSelectionChange(this.dragParams.dragIndex);
+    }
+
+    
+
+    
+  },
+
+  hideAllHandlers: function(){
     // Remove all selected class from position-handlers and overLapPath
     let hiddenElements = ['.position-handler', '.overLapPath', '.curve-handler', '.path-to-origin'].join(',');
     Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().querySelectorAll(hiddenElements), function(elt) {
       elt.classList.remove('selected');
     });
-
-    if (e.srcElement.classList.contains('position-handler') && this.dragParams.isDragging) {
-      this.dragParams.dragElt.classList.add('selected');
-
-      if (this.dragParams.dragIndex !== '0') {
-        // Active Overlap
-        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (this.dragParams.dragIndex))[0].classList.add('selected');
-      }
-    }
-
-    if ((e.srcElement.classList.contains('position-handler') && this.dragParams.isDragging) ||(e.srcElement.classList.contains('curve-handler'))) {
-      let activeClasses = ['.path-to-origin-' + this.dragParams.dragIndex, '.curve-handler-' + this.dragParams.dragIndex].join(', ');
-      Array.prototype.forEach.call(this.refs.svgElt.getDOMNode().querySelectorAll(activeClasses), function(elt) {
-          elt.classList.add('selected');
-        });
-    }
-
-    // Select row in pathCommander
-    DrawStoreActions.drawSelectionChange(this.dragParams.dragIndex);
-
   },
 
   updatePosition: function(x, y) {
@@ -303,7 +320,8 @@ let DrawContainer = React.createClass({
       let oldEltX = null,
         oldEltY = null;
       positionHandlers = this.handlers.map((elt, i) => {
-        let posHand = <rect className='position-handler' x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.handlerParams.cubeSize} height={this.handlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
+        let classNames = 'position-handler position-handler-'+elt.index,
+          posHand = <rect className={classNames} x={elt.x || oldEltX.x} y={elt.y || oldEltY.y} width={this.handlerParams.cubeSize} height={this.handlerParams.cubeSize} data-id={elt.index} key={i}></rect>;
         oldEltX = elt.x ? elt : oldEltX;
         oldEltY = elt.y ? elt : oldEltY;
         return posHand;

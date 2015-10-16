@@ -31,7 +31,7 @@ let DrawStoreActions = {
 
 	paramSelectionChange: function(data){
 		AppDispatcher.handleViewAction({
-			actionType: DrawStoreConstants.PARAM_SELECTION_CHANGE,
+			actionType: DrawStoreConstants.PATH_SELECTION_CHANGE,
 			data: data
 		})
 	}

@@ -46,10 +46,8 @@ let Row = React.createClass({
   },
 
   onFocus: function(){
-    Array.prototype.forEach.call(document.getElementsByClassName('row'), function(elt){
-      elt.classList.remove("active");
-    })
-    this.refs.row.getDOMNode().classList.add("active");
+    this.props.onFocus(this.props.index, true);
+    console.log(this.props);
   },
 
   getNextPointCoord: function(){

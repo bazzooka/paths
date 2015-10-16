@@ -115,7 +115,7 @@ let PathCommander = React.createClass({
 
   },
 
-  onSelectHandler: function(index){
+  onSelectHandler: function(index, propagate){
     for(let row in this.refs){
       if(this.refs.hasOwnProperty(row)){
         if(this.refs[row].props.index === parseInt(index, 10)){
@@ -124,6 +124,9 @@ let PathCommander = React.createClass({
           this.refs[row].activeRow(false);
         }
       }
+    }
+    if(propagate){
+      DrawStoreActions.paramSelectionChange(index);
     }
   },
 
@@ -135,7 +138,7 @@ let PathCommander = React.createClass({
         let ref = "command-" + index;
         return (
           <div key={ref}>
-	            <Row command={command.command} x={command.x} y={command.y} ref={ref} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} index={index}>
+	            <Row command={command.command} x={command.x} y={command.y} ref={ref} index={index} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} onFocus={this.onSelectHandler} >
 	              <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
 	            </Row>
 	          </div>
