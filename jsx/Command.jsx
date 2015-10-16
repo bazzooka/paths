@@ -41,8 +41,9 @@ let Command = React.createClass({
   },
 
   updatePath: function(isCommandChanged) {
-    let x1 = 0, y1 = 0, x2 = 0, y2 = 0, x = 0, y = 0;
+    let x1 = 0, y1 = 0, x2 = 0, y2 = 0, x = 0, y = 0, command = "";
 
+    command = isCommandChanged ? this.props.command: this.state.command;
     if(typeof(isCommandChanged) === "boolean"){
       x1 = this.props.x1 || "";
       y1 = this.props.y1 || "";
@@ -58,16 +59,16 @@ let Command = React.createClass({
       x = this.refs.x && this.refs.x.getDOMNode().value || "";
       y = this.refs.y && this.refs.y.getDOMNode().value || "";
     }
-
+    
     this.setState({
-      command : isCommandChanged ? this.props.command: this.state.command,
+      command : command,
       x1: x1,
       y1: y1,
       x2: x2,
       y2: y2,
       x: x,
       y: y,
-      path: this.props.command  +" " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + x + " " + y
+      path: command  +" " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + x + " " + y
     }, function() {
       this.props.onUpdate();
     });

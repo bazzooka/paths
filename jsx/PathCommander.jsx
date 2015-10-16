@@ -12,8 +12,12 @@ let PathCommander = React.createClass({
       allRows: [
         {
           "command": "M",
-          "x": "16",
-          "y": "20"
+          "x": "20",
+          "y": "20",
+          "x1": "",
+          "y1": "",
+          "x2" : "",
+          "y2": ""
         }
         // ,
         // {
@@ -141,7 +145,7 @@ let PathCommander = React.createClass({
         let ref = "command-" + index;
         return (
           <div key={ref}>
-	            <Row command={command.command} x={command.x} y={command.y} ref={ref} index={index} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} onFocus={this.onSelectHandler} >
+	            <Row command={command.command} x={command.x} y={command.y} x1={command.x1} y1={command.y1} x2={command.x2} y1={command.y2} ref={ref} index={index} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} onFocus={this.onSelectHandler} >
 	              <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
 	            </Row>
 	          </div>
