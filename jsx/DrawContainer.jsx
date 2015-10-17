@@ -101,10 +101,13 @@ let DrawContainer = React.createClass({
     this.hideAllHandlers();
 
     if(typeof(e) === "number"){
-      let allOverLap = this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath');
-      this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler-' + e)[0].classList.add('selected');
-      if(allOverLap.length > 1){
-        this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (e+1))[0].classList.add('selected');
+      let allOverLap = this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath'),
+        positionHandlerSelected = this.refs.svgElt.getDOMNode().getElementsByClassName('position-handler-' + e);
+      
+      positionHandlerSelected.length > 0 && positionHandlerSelected[0].classList.add('selected');
+      if(allOverLap.length > 0){
+        let overLapToSelect = this.refs.svgElt.getDOMNode().getElementsByClassName('overLapPath-' + (e));
+        overLapToSelect.length > 0 && overLapToSelect[0].classList.add('selected');
       }
       
 

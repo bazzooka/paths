@@ -16,49 +16,49 @@ let PathCommander = React.createClass({
           "y": "20",
           "x1": "",
           "y1": "",
-          "x2" : "",
+          "x2": "",
           "y2": ""
         }
-        // ,
-        // {
-        //   "command": "C",
-        //   "x": "21",
-        //   "y": "20",
-        //   "x1": "20",
-        //   "y1": "20",
-        //   "x2": "20",
-        //   "y2": "20"
-        // },
-        // {
-        //   "command": "L",
-        //   "x": "41",
-        //   "y": "40",
-        //   "x1": "20",
-        //   "y1": "20",
-        //   "x2": "20",
-        //   "y2": "20"
-        // }
+      // ,
+      // {
+      //   "command": "C",
+      //   "x": "21",
+      //   "y": "20",
+      //   "x1": "20",
+      //   "y1": "20",
+      //   "x2": "20",
+      //   "y2": "20"
+      // },
+      // {
+      //   "command": "L",
+      //   "x": "41",
+      //   "y": "40",
+      //   "x1": "20",
+      //   "y1": "20",
+      //   "x2": "20",
+      //   "y2": "20"
+      // }
       ]
     }
   },
 
-  componentDidMount: function(){
+  componentDidMount: function() {
     this.isReady = false;
-    PathStore.addChangeListener(this._onChange);   
+    PathStore.addChangeListener(this._onChange);
   },
 
-  _onChange: function(param){
-    switch(param){
-      case DrawStoreConstants.DRAW_CHANGE : 
+  _onChange: function(param) {
+    switch (param) {
+      case DrawStoreConstants.DRAW_CHANGE :
         this.onDrawChanged(PathStore.getLastPosition());
         break;
-      case DrawStoreConstants.DRAW_SELECTION_CHANGE : 
+      case DrawStoreConstants.DRAW_SELECTION_CHANGE :
         this.onSelectHandler(PathStore.getLastSelection())
     }
   },
 
   onDrawChanged: function(position) {
-    position.index && this.refs["command-" + position.index ].onDrawChanged(position);
+    position.index && this.refs["command-" + position.index].onDrawChanged(position);
   },
 
   onParamsChange: function(controls) {
@@ -66,11 +66,15 @@ let PathCommander = React.createClass({
 
     this.setState({
       allRows: path.controls
-    }, function() {});
+    }, function() {
+      controls && this.onSelectHandler(controls.index, true);
+    });
 
-     DrawStoreActions.pathChange(path);
+    DrawStoreActions.pathChange(path);
 
-    if(!this.isReady){
+    this.props.onResize("true");
+
+    if (!this.isReady) {
       this.isReady = true;
       this.props.onComponentDidMount();
     }
@@ -111,28 +115,28 @@ let PathCommander = React.createClass({
       "y": "10"
     });
 
-    
+
 
     this.setState({
       allRows: newRows
     }, function() {
-      this.onParamsChange();
+      this.onParamsChange(this.state.allRows[this.state.allRows.length - 1]);
       this.props.onResize("true");
     });
 
   },
 
-  onSelectHandler: function(index, propagate){
-    for(let row in this.refs){
-      if(this.refs.hasOwnProperty(row)){
-        if(this.refs[row].props.index === parseInt(index, 10)){
+  onSelectHandler: function(index, propagate) {
+    for (let row in this.refs) {
+      if (this.refs.hasOwnProperty(row)) {
+        if (this.refs[row].props.index === parseInt(index, 10)) {
           this.refs[row].activeRow(true);
         } else {
           this.refs[row].activeRow(false);
         }
       }
     }
-    if(propagate){
+    if (propagate) {
       DrawStoreActions.paramSelectionChange(index);
     }
   },
@@ -145,10 +149,10 @@ let PathCommander = React.createClass({
         let ref = "command-" + index;
         return (
           <div key={ref}>
-	            <Row command={command.command} x={command.x} y={command.y} x1={command.x1} y1={command.y1} x2={command.x2} y1={command.y2} ref={ref} index={index} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} onFocus={this.onSelectHandler} >
-	              <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
-	            </Row>
-	          </div>
+              <Row command={command.command} x={command.x} y={command.y} x1={command.x1} y1={command.y1} x2={command.x2} y1={command.y2} ref={ref} index={index} onParamsChange={this.onParamsChange} getControlsPoint={this.getControlPoints} onFocus={this.onSelectHandler} >
+                <span className="delete-row" onClick={this.deleteRow.bind(this, index)}>X</span>
+              </Row>
+            </div>
           )
         });
       }
@@ -156,9 +160,9 @@ let PathCommander = React.createClass({
       // <Row command="M" ref="command-" onChange={this.onChange} />
       return (
         <div id="path-commander" className="path-commander">
-	        {commands}
-	        <div className="addRow" onClick={this.addRow}>+ ADD POINT</div>
-	      </div>
+          {commands}
+          <div className="addRow" onClick={this.addRow}>+ ADD POINT</div>
+        </div>
         )
     }
   });

@@ -22,24 +22,57 @@ let Row = React.createClass({
     });
   },
 
-/*  componentWillUpdate: function(newProps){
-    this.setState({
-      command: newProps.command,
-      x: newProps.x,
-      y: newProps.y
-    })
-  },*/
+  /*  componentWillUpdate: function(newProps){
+      this.setState({
+        command: newProps.command,
+        x: newProps.x,
+        y: newProps.y
+      })
+    },*/
 
   commandChange: function(e) {
-    this.setState({
-      command: e.currentTarget.value
-    }, function(){
-      this.refs.coordonnees.updatePath(true);
-    });
+    // this.setState({
+    //   command: e.currentTarget.value
+    // }, function() {
+    //   this.refs.coordonnees.updatePath(true);
+    // });
+    let lastPosXY = SVGUtils.getLastPosFrom(this.props.getControlsPoint().controls, this.props.index),
+      command = e.currentTarget.value,
+      finalPosition = {
+        command: command,
+        x1: "",
+        y1: "",
+        x2: "",
+        y2: "",
+        x: "",
+        y: ""
+      };
+
+    if (command === "C" || command === "Q") {
+      finalPosition.x1 = parseInt(lastPosXY.x, 10) - 10;
+      finalPosition.y1 = parseInt(lastPosXY.y, 10) - 5;
+    }
+
+    if (command === "C" || command === "S") {
+      finalPosition.x2 = parseInt(lastPosXY.x, 10) + 10;
+      finalPosition.y2 = parseInt(lastPosXY.y, 10) - 5;
+    }
+
+    if (command === "C" || command === "M" || command === "L" || command === "H" || command === "Q" || command === "S" || command === "T") {
+      finalPosition.x = parseInt(lastPosXY.x, 10) + 10;
+    }
+
+    if (command === "C" || command === "M" || command === "L" || command === "V" || command === "Q" || command === "S" || command === "T") {
+      finalPosition.y = parseInt(lastPosXY.y, 10) + 5;
+    }
+
+    this.refs.coordonnees.updatePathBis(finalPosition);
+    // this.refs.coordonnees.setState(finalPosition);
   },
 
   onUpdate: function() {
     let newState = this.refs.coordonnees.state;
+    newState.index = this.props.index;
     this.state = newState;
     this.props.onParamsChange(newState);
   },
@@ -48,18 +81,45 @@ let Row = React.createClass({
     this.refs.coordonnees.onDrawChanged(position);
   },
 
-  onFocus: function(){
+  onFocus: function() {
     this.props.onFocus(this.props.index, true);
-    console.log(this.props);
   },
 
-  getNextPointCoord: function(){
-    let lastPos = SVGUtils.getLastPosFrom(this.props.getControlsPoint().controls, this.props.index);
-    return lastPos;
+  getNextPointCoord: function() {
+    let lastPosXY = SVGUtils.getLastPosFrom(this.props.getControlsPoint().controls, this.props.index),
+      command = this.props.command,
+      finalPosition = {
+        x1: "",
+        y1: "",
+        x2: "",
+        y2: "",
+        x: "",
+        y: ""
+      };
+
+    if (command === "C" || command === "Q") {
+      finalPosition.x1 = parseInt(lastPosXY.x, 10) - 10;
+      finalPosition.y1 = parseInt(lastPosXY.y, 10) - 5;
+    }
+
+    if (command === "C" || command === "S") {
+      finalPosition.x2 = parseInt(lastPosXY.x, 10) + 10;
+      finalPosition.y2 = parseInt(lastPosXY.y, 10) - 5;
+    }
+
+    if (command === "C" || command === "M" || command === "L" || command === "H" || command === "Q" || command === "S" || command === "T") {
+      finalPosition.x = parseInt(lastPosXY.x, 10) + 10;
+    }
+
+    if (command === "C" || command === "M" || command === "L" || command === "V" || command === "Q" || command === "S" || command === "T") {
+      finalPosition.y = parseInt(lastPosXY.y, 10) + 5;
+    }
+
+    return finalPosition;
   },
 
-  activeRow: function(active){
-    if(active){
+  activeRow: function(active) {
+    if (active) {
       this.refs.row.getDOMNode().classList.add("active");
     } else {
       this.refs.row.getDOMNode().classList.remove("active");
@@ -69,12 +129,13 @@ let Row = React.createClass({
   render: function() {
     let coordonnees = null,
       options = null,
+      lastPosition = this.getNextPointCoord(),
       me = this;
 
     if (!this.state) {
       return null;
     }
-            //console.log(this.props.command);
+    //console.log(this.props.command);
     //console.log(this.props.getControlsPoint());
 
     // switch (this.props.command) {
@@ -108,7 +169,7 @@ let Row = React.createClass({
 
     // }
 
- 
+
 
     options = ["M", "L", "H", "V", "Z", "C", "S", "Q", "T"].map((elt, i) => {
       return (<option value={elt} key={elt}>{elt}</option>)
@@ -121,7 +182,7 @@ let Row = React.createClass({
               {options}
             </select>
           </div>
-          <Command command={this.state.command || this.props.command} x1={this.props.x1 || this.getNextPointCoord().x} y1={this.props.y1  || this.getNextPointCoord().y} x2={this.props.x2 || this.getNextPointCoord().x} y2={this.props.y2  || this.getNextPointCoord().y} x={this.props.x || this.getNextPointCoord().x} y={this.props.y || this.getNextPointCoord().y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />
+          <Command command={this.state.command || this.props.command} x1={this.props.x1 || lastPosition.x1} y1={this.props.y1 || lastPosition.y1} x2={this.props.x2 || lastPosition.x2} y2={this.props.y2 || lastPosition.y2} x={this.props.x || lastPosition.x} y={this.props.y || lastPosition.y} ref="coordonnees" onUpdate={this.onUpdate} onFocus={this.onFocus} />
           <div className="entry">
             {this.props.children}
           </div>
