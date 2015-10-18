@@ -3,7 +3,7 @@
 ## A simple SVG path editor
 
 ## TODO
-- Too many callback => Use Redux !
+- Overlap with S command => DrawContainer
 - Add image
 - Possibility to create multiple path
 - Drag & drop command in parameter

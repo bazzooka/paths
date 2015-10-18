@@ -245,8 +245,27 @@ let DrawContainer = React.createClass({
         case 'L':
         case 'T':
         case 'C':
-        case 'S':
         case 'Q':
+          this.middlePaths[i - 1].x1 = path.x1 || null;
+          this.middlePaths[i - 1].y1 = path.y1 || null;
+          this.middlePaths[i - 1].x2 = path.x2 || null;
+          this.middlePaths[i - 1].y2 = path.y2 || null;
+
+          this.middlePaths[i - 1].xEnd = path.x;
+          this.middlePaths[i - 1].yEnd = path.y;
+
+          this.middlePaths.push({
+            xStart: path.x,
+            yStart: path.y,
+            xEnd: path.x,
+            yEnd: path.y,
+            command: 'Z'
+          });
+
+          this.middlePaths[i - 1].command = path.command;
+          this.middlePaths[i - 1].index = i;
+          break;
+        case 'S':
           this.middlePaths[i - 1].x1 = path.x1 || null;
           this.middlePaths[i - 1].y1 = path.y1 || null;
           this.middlePaths[i - 1].x2 = path.x2 || null;
