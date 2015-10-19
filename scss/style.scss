@@ -214,3 +214,17 @@ path{
 	}
 }
 
+.image-uploader-container {
+	.image-field {
+		display: flex;
+
+		label {
+		    flex: 3;
+		}
+
+		input[type="number"] {
+		    flex: 2;
+		}
+	}
+}
+

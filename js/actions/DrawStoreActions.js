@@ -34,6 +34,13 @@ let DrawStoreActions = {
 			actionType: DrawStoreConstants.PATH_SELECTION_CHANGE,
 			data: data
 		})
+	},
+
+	imageChange: function(data){
+		AppDispatcher.handleViewAction({
+			actionType: DrawStoreConstants.IMAGE_CHANGE,
+			data: data
+		})
 	}
 }
 

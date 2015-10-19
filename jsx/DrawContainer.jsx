@@ -1,6 +1,7 @@
 import React from 'react';
 import SVGUtils from '../js/SVGUtils.js';
 import SVG_Grid from './SVG_Grid.jsx';
+import SVG_Image from './SVG_Image.jsx';
 
 import DrawStore from '../js/stores/DrawStore';
 import DrawStoreConstants from '../js/constants/DrawStoreConstants';
@@ -93,8 +94,14 @@ let DrawContainer = React.createClass({
       case DrawStoreConstants.PATH_CHANGE : 
         this.pathChanged(DrawStore.getPath());
         break;
+      case DrawStoreConstants.IMAGE_CHANGE : 
+        this.imageChanged(DrawStore.getImage());
+        break;
     }
-    
+  },
+
+  imageChanged: function(imageObj){
+    this.refs.imageBg.setState(imageObj);
   },
 
   updateHandlersColors: function(e) {
@@ -301,8 +308,13 @@ let DrawContainer = React.createClass({
 
   },
 
-  imageUploaded: function(url){
-    console.log("Image uploaded");
+  imageUploaded: function(image){
+      let w = image.w,
+        h = image.h,
+        data = image.data,
+        x = image.x,
+        y = image.y;
+
   },
 
   resize: function(e) {
@@ -418,6 +430,7 @@ let DrawContainer = React.createClass({
         }}>
             </defs>
             <rect x='0' y='0' width='100%' height='100%' fill='black'/>
+            <SVG_Image ref="imageBg" x="0" y="0" w="100%" h="100%" data="" />
             <SVG_Grid ref='grid'/>
             {paths}
             {middlePaths}

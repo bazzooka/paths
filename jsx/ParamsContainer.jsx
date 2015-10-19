@@ -16,7 +16,7 @@ let ParamsContainer = React.createClass({
       		  <PathCommander ref="pathCommander" />
           </ParamsPanel>
           <ParamsPanel title="Image" isOpen="true">
-            <ImageUploader ref="imageUploader" imageUploaded={this.imageUploaded}/>
+            <ImageUploader ref="imageUploader" imageChanged={this.imageUploaded}/>
           </ParamsPanel>
       	</div>
       )
