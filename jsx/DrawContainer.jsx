@@ -246,25 +246,6 @@ let DrawContainer = React.createClass({
         case 'T':
         case 'C':
         case 'Q':
-          this.middlePaths[i - 1].x1 = path.x1 || null;
-          this.middlePaths[i - 1].y1 = path.y1 || null;
-          this.middlePaths[i - 1].x2 = path.x2 || null;
-          this.middlePaths[i - 1].y2 = path.y2 || null;
-
-          this.middlePaths[i - 1].xEnd = path.x;
-          this.middlePaths[i - 1].yEnd = path.y;
-
-          this.middlePaths.push({
-            xStart: path.x,
-            yStart: path.y,
-            xEnd: path.x,
-            yEnd: path.y,
-            command: 'Z'
-          });
-
-          this.middlePaths[i - 1].command = path.command;
-          this.middlePaths[i - 1].index = i;
-          break;
         case 'S':
           this.middlePaths[i - 1].x1 = path.x1 || null;
           this.middlePaths[i - 1].y1 = path.y1 || null;
@@ -386,13 +367,24 @@ let DrawContainer = React.createClass({
      * Draw middlePaths
      */
     let middlePathsSize = this.middlePaths.length;
-    middlePaths = this.middlePaths.map(function(elt, i) {
+    middlePaths = this.middlePaths.map(function(elt, i, allElts) {
         if (middlePathsSize - 1 === i) {
           return;
         }
         let classIndex = 'overLapPath overLapPath-' + elt.index,
-          path = ['M', elt.xStart, elt.yStart, elt.command].join(' ') + ' ';
+          path = "";
 
+        if("S" === elt.command && i >= 1){
+          let beforePoint = allElts[i-1];
+          path += ['M', beforePoint.xStart, beforePoint.yStart, beforePoint.command].join(' ') + ' ';
+          path += (beforePoint.x1 ? [beforePoint.x1, beforePoint.y1].join(' ') : '') + ' ';
+          path += (beforePoint.x2 ? [beforePoint.x2, beforePoint.y2].join(' ') : '') + ' ';
+          path += (beforePoint.xEnd && beforePoint.command !== 'V') ? [beforePoint.xEnd, ' '].join(' ') : ' ';
+          path += (beforePoint.yEnd && beforePoint.command !== 'H') ? [beforePoint.yEnd, ' '].join(' ') : ' ';
+          path += elt.command + ' ';
+        } else {
+          path += ['M', elt.xStart, elt.yStart, elt.command].join(' ') + ' ';
+        }
         path += (elt.x1 ? [elt.x1, elt.y1].join(' ') : '') + ' ';
         path += (elt.x2 ? [elt.x2, elt.y2].join(' ') : '') + ' ';
 
