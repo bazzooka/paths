@@ -10,13 +10,21 @@ let ImageUploader = React.createClass({
 			y: "0",
 			w: "100",
 			h: "100",
+			visible: 0,
 			data: ""
 		})
 	},
 
 	onParamsChange: function(attrib, e){
-		let newChange = {};
-		newChange[attrib] = e.target.value;
+		let newChange = {},
+			target = e.target;
+
+		if("checkbox" === target.type){
+			newChange[attrib] = e.target.checked ? "visible" : "hidden";
+		} else {
+			newChange[attrib] = e.target.value;
+		}
+		
 		this.setState(newChange, function(){
 			DrawStoreActions.imageChange(this.state);
 		});
@@ -56,6 +64,10 @@ let ImageUploader = React.createClass({
 						<label>Height :</label>
 						<input ref="h"  type="number" h={this.state.h} value={this.state.h} min="0" max="100" onChange={this.onParamsChange.bind(this, 'h')}/>
 						<span>%</span>
+					</div>
+					<div className="image-field">
+						<label>Visible :</label>
+						<input ref="visible"  type="checkbox" h={this.state.visible} checked={this.state.checked} onChange={this.onParamsChange.bind(this, 'visible')}/>
 					</div>
 				</form>
 			</div>
