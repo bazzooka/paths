@@ -429,7 +429,7 @@ let DrawContainer = React.createClass({
           __html: defs
         }}>
             </defs>
-            <rect x='0' y='0' width='100%' height='100%' fill='black'/>
+            <rect x='0' y='0' width='100%' height='100%' fill='red'/>
             <SVG_Image ref="imageBg" x="0" y="0" w="100" h="100" data="" visible="hidden" />
             <SVG_Grid ref='grid'/>
             {paths}

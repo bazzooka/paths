@@ -1,14 +1,5 @@
 import React from 'react';
 import SVGUtils from '../js/SVGUtils.js';
-import M_Command from './M_Command.jsx';
-import L_Command from './L_Command.jsx';
-import H_Command from './H_Command.jsx';
-import V_Command from './V_Command.jsx';
-import Z_Command from './Z_Command.jsx';
-import C_Command from './C_Command.jsx';
-import S_Command from './S_Command.jsx';
-import Q_Command from './Q_Command.jsx';
-import T_Command from './T_Command.jsx';
 import Command from './Command.jsx';
 
 
